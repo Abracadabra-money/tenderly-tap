@@ -1,7 +1,10 @@
 {
   "ETH": {
+    "chainId": "1",
     "name": "Ethereum",
-    "imageUrl": "https://chainlist.org/_next/image?url=https%3A%2F%2Fdefillama.com%2Fchain-icons%2Frsz_ethereum.jpg&w=32&q=75",
+    "symbol": "ETH",
+    "rpc": "https://rpc.ankr.com/eth",
+    "imageUrl": "https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg",
     "tokens": {
       "spell": "0x090185f2135308BaD17527004364eBcC2D37e5F6",
       "ice": "0xf16e81dce15b08f326220742020379b855b87df9",
@@ -16,14 +19,16 @@
       "wbtc": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
       "mim": "0x99d8a9c45b2eca8864373a26d1459e3dff1e17f3",
       "s*usdc": "0xdf0770df86a8034b3efef0a1bb3c889b8332ff56",
-      "s*usdt": "0x38ea452219524bb87e18de1c24d3bb59510bd783"
+      "s*usdt": "0x38ea452219524bb87e18de1c24d3bb59510bd783",
+      "ape": "0x4d224452801ACEd8B2F0aebE155379bb5D594381"
     },
     "largeHolders": {
       "multichain": "0xc564ee9f21ed8a2d8e7e76c085740d5e4c5fafbe",
       "sushi": "0xf5bce5077908a1b7370b9ae04adc565ebd643966",
       "arbitrum": "0xa3a7b6f88361f48403514059f1f16c8e78d60eec",
       "stargate": "0xb0d502e938ed5f4df2e681fe6e419ff29631d62b",
-      "stargateusdc": "0xb0d502e938ed5f4df2e681fe6e419ff29631d62b"
+      "stargateusdc": "0xb0d502e938ed5f4df2e681fe6e419ff29631d62b",
+      "binance": "0xF977814e90dA44bFA03b6295A0616a897441aceC"
     },
     "cauldrons": {
       "ALCX": "0x7b7473a76D6ae86CE19f7352A1E89F6C9dc39020",
@@ -61,12 +66,16 @@
       "yvMIM3CRV": "0xaf487ab3b81B3E6370B5D4C69A8daEf7Cc65676F",
       "yvDAI": "0x7Ce7D9ED62B9A6c5aCe1c6Ec9aeb115FA3064757",
       "Stargate USDC": "0x738480073220bdAa798f7116C22F4e495CF06336",
-      "Stargate USDT": "0x4439255D89B9Ce11e947b2C07Fa146326b6718A8"
+      "Stargate USDT": "0x4439255D89B9Ce11e947b2C07Fa146326b6718A8",
+      "mAPE": "0x70f2c66db34d9127E4d81Af83911Df8403c65c2f"
     }
   },
   "AVAX": {
-    "name": "Avalanche",
-    "imageUrl": "https://chainlist.org/_next/image?url=https%3A%2F%2Fdefillama.com%2Fchain-icons%2Frsz_avalanche.jpg&w=32&q=75",
+    "chainId": "43114",
+    "name": "Avalanche Network",
+    "symbol": "AVAX",
+    "rpc": "https://rpc.ankr.com/avalanche",
+    "imageUrl": "https://icons.llamao.fi/icons/chains/rsz_avalanche.jpg",
     "tokens": {
       "usdt.e": "0xc7198437980c041c805a1edcba50c1ce5db95118",
       "usdt": "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
@@ -86,7 +95,8 @@
       "celer": "0xef3c714c9425a8f3697a9c969dc1af30ba82e5d4",
       "pngHolder": "0x66c048d27afb5ee59e4c07101a483654246a4eda",
       "platDai": "0xc1daa16e6979c2d1229cb1fd0823491ea44555be",
-      "degenBox": "0x1fc83f75499b7620d53757f0b01e2ae626aae530"
+      "degenBox": "0x1fc83f75499b7620d53757f0b01e2ae626aae530",
+      "abra": "0xae64a325027c3c14cf6abc7818aa3b9c07f5c799"
     },
     "cauldrons": {
       "AVAX": "0x3CFEd0439aB822530b1fFBd19536d897EF30D2a2",
@@ -100,8 +110,11 @@
     }
   },
   "FTM": {
-    "name": "Fantom",
-    "imageUrl": "https://chainlist.org/_next/image?url=https%3A%2F%2Fdefillama.com%2Fchain-icons%2Frsz_fantom.jpg&w=32&q=75",
+    "chainId": "250",
+    "name": "Fantom Opera",
+    "symbol": "FTM",
+    "rpc": "https://rpc.ftm.tools",
+    "imageUrl": "https://icons.llamao.fi/icons/chains/rsz_fantom.jpg",
     "tokens": {
       "usdc": "0x04068da6c83afcfa0e13ba15a6696662335d5b75",
       "wbtc": "0x321162Cd933E2Be498Cd2267a90534A804051b11",
@@ -125,21 +138,78 @@
       "FTM 0xEf": "0xEf7A0bd972672b4eb5DF28f2F544f6b0BF03298a",
       "xBOO": "0xa3Fc1B4b7f06c2391f7AD7D4795C1cD28A59917e",
       "FTM/MIM Spirit": "0x7208d9F9398D7b02C5C22c334c2a7A3A98c0A45d",
-      "FTM/MIM Spooky": "0x4fdfFa59bf8dda3F4d5b38F260EAb8BFaC6d7bC1"
+      "FTM/MIM Spooky": "0x4fdfFa59bf8dda3F4d5b38F260EAb8BFaC6d7bC1",
+      "fUSDT/USDC Spirit": "0xB23a8A3a6CEC34827BceFF327050B37Ce98CA4cD"
     }
   },
   "OP": {
+    "chainId": "10",
     "name": "Optimism",
-    "imageUrl": "https://chainlist.org/_next/image?url=https%3A%2F%2Fdefillama.com%2Fchain-icons%2Frsz_optimism.jpg&w=32&q=75",
+    "symbol": "ETH",
+    "rpc": "https://mainnet.optimism.io",
+    "imageUrl": "https://icons.llamao.fi/icons/chains/rsz_optimism.jpg",
     "tokens": {
       "usdc": "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
       "velo": "0x3c8b650257cfb5f272f799f5e2b4e65093a11a05",
-      "eth": "0x4200000000000000000000000000000000000006"
+      "eth": "0x4200000000000000000000000000000000000006",
+      "mim": "0xB153FB3d196A8eB25522705560ac152eeEc57901",
+      "op": "0x4200000000000000000000000000000000000042"
     },
     "largeHolders": {
       "velo": "0x9c7305eb78a432ced5c4d14cac27e8ed569a2e26",
       "anyswapUsdc": "0xf390830DF829cf22c53c8840554B98eafC5dCBc2",
-      "eth": "0x6202a3b0be1d222971e93aab084c6e584c29db70"
+      "eth": "0x6202a3b0be1d222971e93aab084c6e584c29db70",
+      "mim": "0x4217aa01360846a849d2a89809d450d10248b513",
+      "op": "0x2a82ae142b2e62cb7d10b55e323acb1cab663a26",
+      "usdcWhale": "0xf390830df829cf22c53c8840554b98eafc5dcbc2"
     }
+  },
+  "ARBI": {
+    "chainId": "42161",
+    "name": "Arbitrum One",
+    "symbol": "ETH",
+    "rpc": "https://rpc.ankr.com/arbitrum",
+    "imageUrl": "https://icons.llamao.fi/icons/chains/rsz_arbitrum.jpg",
+    "tokens": {
+      "sGLP": "0x5402b5f40310bded796c7d0f3ff6683f5c0cffdf",
+      "WETH": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+      "mGLP": "0x8833c3438ff37da7d472502c3d8d2ad8fe42225c",
+      "mim": "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a"
+    },
+    "largeHolders": {
+      "sGLP": "0xc01de756ee31c4ce3252c5d1be4aceb62f4ae807",
+      "GMX": "0x489ee077994b6658eafa855c308275ead8097c4a",
+      "Aave": "0xe50fa9b3c56ffb159cb0fca61f5c9d750e8128c8",
+      "mim": "0xf46bb6dda9709c49efb918201d97f6474eac5aea",
+      "mim2": "0x27807dd7adf218e1f4d885d54ed51c70efb9de50"
+    },
+    "cauldrons": {
+      "GLP": "0xE09223bBdb85a20111DCD72299142a8626d5eA4b",
+      "mGLP": "0x1b46870c3706bbc3c2c7af3d057109ceae9ece2a",
+      "WETH": "0xC89958B03A55B5de2221aCB25B58B89A000215E6"
+    }
+  },
+  "BNB": {
+    "chainId": "56",
+    "name": "Binance Smart Chain Mainnet",
+    "symbol": "BNB",
+    "rpc": "https://bsc-dataseed4.ninicoin.io",
+    "imageUrl": "https://icons.llamao.fi/icons/chains/rsz_binance.jpg",
+    "tokens": {},
+    "largeHolders": {},
+    "cauldrons": {
+      "BNB": "0x692CF15F80415D83E8c0e139cAbcDA67fcc12C90",
+      "CAKE": "0xF8049467F3A9D50176f4816b20cDdd9bB8a93319"
+    }
+  },
+  "MATIC": {
+    "chainId": "137",
+    "name": "Polygon",
+    "symbol": "MATIC",
+    "rpc": "https://polygon.llamarpc.com",
+    "imageUrl": "https://icons.llamao.fi/icons/chains/rsz_polygon.jpg",
+    "tokens": {},
+    "largeHolders": {},
+    "cauldrons": {}
   }
 }

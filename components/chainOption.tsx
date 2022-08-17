@@ -32,7 +32,7 @@ export default function ChainOption(props: ChainOptionProps) {
       </div>
 
       <span
-        className={`text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4 ${
+        className={`text-indigo-700 absolute inset-y-0 right-0 flex items-center pr-4 ${
           props.currentChain == props.name ? '' : 'hidden'
         }`}
       >

@@ -1,10 +1,9 @@
-import { useState, useEffect, ChangeEvent, MouseEvent, ChangeEventHandler, MouseEventHandler } from 'react';
-import { safeJsonParse, camelize, formatAddress, getChainFromId } from '../helpers/utils';
-import { Chain } from '../models/chain';
-import { map, find, keys } from 'underscore';
+import { useState, useEffect, ChangeEvent, MouseEvent, ChangeEventHandler } from 'react';
+import { safeJsonParse, camelize, formatAddress } from '../helpers/utils';
 import { TenderlyManager } from '../models/tenderlyManager';
 import { FlashState, ChainConfig, FaucetProps } from '../helpers/interfaces';
 import ChainSelect from './chainSelect';
+import Spinner from './spinner';
 import ForkUrlInput from './forkUrlInput';
 import SubmitButton from './submitButton';
 
@@ -18,26 +17,15 @@ const config: ChainConfig = require('../configs/chains.json');
 // cauldronAddress: string;
 // holderAddresses: string;
 
-const chainOptions = map(keys(config), (key) => new Chain(key, config[key].imageUrl));
-
-export default function Faucet(props: FaucetProps) {
+export default function GasManager(props: FaucetProps) {
   const [toAddress, setToAddress] = useState('');
   const [forkUrl, setForkUrl] = useState('');
   const [chain, setChain] = useState('ETH');
-  const [holderAddresses, setHolderAddresses] = useState('');
-  const [tokenAmount, setTokenAmount] = useState('');
-  const [tokenAddress, setTokenAddress] = useState('');
+  const [tokenAmount, setTokenAmount] = useState('100');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const [tenderlyManager, setTenderlyManager] = useState<TenderlyManager | undefined>(undefined);
-
-  useEffect(() => setTenderlyManager(new TenderlyManager(chain, forkUrl)), [forkUrl, chain]);
 
   useEffect(function () {
     setForkUrl(safeJsonParse(window.localStorage.getItem('forkUrl')));
-    setToAddress(safeJsonParse(window.localStorage.getItem('toAddress')));
-    setHolderAddresses(safeJsonParse(window.localStorage.getItem('holderAddresses')));
-    setTokenAddress(safeJsonParse(window.localStorage.getItem('tokenAddress')));
     setTokenAmount(safeJsonParse(window.localStorage.getItem('tokenAmount')));
   }, []);
 
@@ -45,70 +33,36 @@ export default function Faucet(props: FaucetProps) {
     window.localStorage.setItem(key, JSON.stringify(value));
   }
 
+  function isAddress(value: string) {
+    return value.toLowerCase().substring(0, 2) === '0x';
+  }
+
   function handleChange(key: string, value: string, setter: Function) {
     if (key == 'chain') {
       saveToLocalStorage('tokenAddress', '');
-      setTokenAddress('');
     }
 
     saveToLocalStorage(key, value);
     setter(value);
   }
 
-  function isAddress(value: string) {
-    return value.toLowerCase().substring(0, 2) === '0x';
-  }
-
-  function handleTokenChange(event: ChangeEvent<HTMLInputElement>) {
-    var tokenAddress = '';
-    console.log(event.target.value);
-    if (isAddress(event.target.value)) {
-      tokenAddress = event.target.value;
-    } else {
-      tokenAddress = config[chain].tokens[event.target.value];
-    }
-    console.log('tokenAddress', tokenAddress);
-    handleChange('tokenAddress', tokenAddress, setTokenAddress);
-  }
-
-  function getTokenAddressOptions() {
-    let rows = [];
-    for (let [token, address] of Object.entries(config[chain].tokens)) {
-      rows.push(
-        <option value={address as string} key={token}>
-          {token}
-        </option>
-      );
-    }
-    return rows;
-  }
-
   async function handleSubmit(event: MouseEvent<HTMLButtonElement>) {
-    event.preventDefault();
+    try {
+      setIsSubmitting(true);
+      event.preventDefault();
 
-    if (tenderlyManager == null) return;
-    setIsSubmitting(true);
-
-    let result = await tenderlyManager.addTokenToWallet(
-      tokenAddress,
-      toAddress,
-      parseFloat(tokenAmount),
-      holderAddresses.split(',')
-    );
-
-    if (result.status == 'success') {
+      let tenderlyManager = new TenderlyManager(chain, forkUrl);
+      await tenderlyManager.addGasToken(toAddress, parseFloat(tokenAmount));
       showFlashMessage({
         type: 'success',
         boldMessage: 'Success!',
-        message: `Sent ${tokenAmount} ${getTokenNameFromAddress(tokenAddress).toUpperCase()} to ${formatAddress(
-          toAddress
-        )}`,
+        message: `Sent ${tokenAmount} gas tokens to ${formatAddress(toAddress)}`,
       });
-    } else {
+    } catch (error) {
       showFlashMessage({
         type: 'error',
         boldMessage: 'Porcodillo!',
-        message: `Error: ${result.msg}`,
+        message: `Error: ${error}`,
       });
     }
     setIsSubmitting(false);
@@ -146,13 +100,6 @@ export default function Faucet(props: FaucetProps) {
     );
   }
 
-  function getTokenNameFromAddress(tokenAddress: string) {
-    for (let [token, address] of Object.entries(config[chain].tokens)) {
-      if (address == tokenAddress) return token;
-    }
-    return formatAddress(tokenAddress);
-  }
-
   function showFlashMessage(msg: FlashState) {
     props.setFlashMessage(msg);
     setTimeout(() => props.setFlashMessage(undefined), 50000);
@@ -166,18 +113,18 @@ export default function Faucet(props: FaucetProps) {
       </div>
       <div className="col-span-10 col-start-2 lg:col-span-6 lg:mt-10">
         <ForkUrlInput
-          chain={chain}
           forkUrl={forkUrl}
           handleChange={handleChange}
           setForkUrl={setForkUrl}
           showFlashMessage={showFlashMessage}
           setChain={setChain}
+          chain={chain}
         />
         <ChainSelect chain={chain} handleChange={handleChange} setChain={setChain}></ChainSelect>
       </div>
       <div className="col-span-10 col-start-2 lg:col-span-3 lg:col-start-2">
         <h2 className="text-gray-500">02</h2>
-        <h1>TX INFO</h1>
+        <h1>CAULDRON INFO</h1>
       </div>
       <div className="col-span-10 col-start-2 lg:col-span-6 lg:mt-10">
         {renderInputGroup('toAddress', 'To address', '0x123..abc', toAddress, (event: ChangeEvent) =>
@@ -190,29 +137,6 @@ export default function Faucet(props: FaucetProps) {
             (event.target as HTMLInputElement).value,
             setTokenAmount
           )
-        )}
-
-        {renderInputGroup(
-          'tokenAddress',
-          'Token address',
-          '0x123...abc',
-          tokenAddress,
-          (event: ChangeEvent<HTMLInputElement>) => handleTokenChange(event),
-          { list: getTokenAddressOptions() }
-        )}
-
-        {renderInputGroup(
-          'holderAddresses',
-          'Holder addresses',
-          '0x123...abc, 0x234...def',
-          holderAddresses,
-          (event: ChangeEvent) =>
-            handleChange(
-              (event.target as HTMLInputElement).name,
-              (event.target as HTMLInputElement).value,
-              setHolderAddresses
-            ),
-          { footnote: 'Addresses must be separated by commas' }
         )}
       </div>
 

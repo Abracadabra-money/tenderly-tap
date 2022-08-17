@@ -3,3 +3,11 @@ export interface FlashState {
   boldMessage: string;
   message: string;
 }
+
+export interface ChainConfig {
+  [key: string]: any;
+}
+
+export interface FaucetProps {
+  setFlashMessage: Function;
+}
