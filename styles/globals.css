@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.logo {
+  text-align: center;
+  font-size: 50px;
+  letter-spacing: -2px;
+}
+
+h1 {
+  font-family: 'Work Sans';
+  font-size: 30px;
+  letter-spacing: -2px;
+}
+
+h2 {
+  font-family: 'Work Sans';
+  font-size: 20px;
+  letter-spacing: -2px;
+}
+
+.nav-hover {
+  border-bottom: 2px solid;
+}
+
+.svg-background {
+  margin-left: 0px;
+  background: url('/subtle-prism.svg') no-repeat top left;
+  width: 100%;
+}
+
+input::placeholder {
+  opacity: 0.2;
+  color: black;
+}
