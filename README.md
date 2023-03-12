@@ -6,7 +6,7 @@ Tenderly Tap was created to help users quickly set up and fund test wallets on T
 - Transfer tokens from any wallet to another
 - Refill Abracadabra cauldrons with $MIM
 
-## Stack
+## Tech Stack
 
 Tenderly Tap uses the following technologies in its stack:
 
