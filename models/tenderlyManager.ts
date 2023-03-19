@@ -5,53 +5,19 @@ import cauldronAbi from '../abis/cauldronAbi.json';
 import bentoAbi from '../abis/bentoAbi.json';
 import { compact, union } from 'underscore';
 import { FlashState, ChainConfig, FaucetProps } from '../helpers/interfaces';
-import axios from 'axios';
+import { getContract, getProvider } from '../helpers/utils';
 
 const config: ChainConfig = require('../configs/chains.json');
-
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export class TenderlyManager {
   forkUrl;
   provider: ethers.providers.JsonRpcProvider;
-  gasOptions;
   chain: string;
 
   constructor(chain: string, forkUrl: string) {
     this.chain = chain; // options are ETH, AVAX, FTM
     this.forkUrl = forkUrl;
-    this.provider = this.getProvider();
-    this.gasOptions = { gasPrice: 66, gasLimit: 500000 };
-  }
-
-  getForkId() {
-    // Assumes format of 'https://rpc.tenderly.co/fork/320a405a-8c62-40a1-bec5-addfb70a8437'
-    let matches = this.forkUrl.match(/\/fork\/([a-z0-9-]+)/i);
-    return matches && matches.length == 2 ? matches[1] : null;
-  }
-
-  async getForkInfo() {
-    let { data } = await axios.get(
-      `https://api.tenderly.co/api/v2/project/${process.env.NEXT_PUBLIC_TENDERLY_SLUG}/forks/${this.getForkId()}`,
-      {
-        headers: {
-          'X-Access-Key': process.env.NEXT_PUBLIC_TENDERLY_ACCESS_KEY as string,
-        },
-      }
-    );
-    return data;
-  }
-
-  async getChainIdFromFork() {
-    return (await this.getForkInfo()).fork.network_id;
-  }
-
-  getRpc() {
-    return this.forkUrl;
-  }
-
-  getProvider() {
-    return new ethers.providers.JsonRpcProvider(this.getRpc());
+    this.provider = getProvider(forkUrl);
   }
 
   async addGasToken(toAddress: string, amount: number) {
@@ -59,9 +25,7 @@ export class TenderlyManager {
       [toAddress],
       ethers.utils.hexValue(ethers.utils.parseUnits(amount.toString(), 'ether').toHexString()),
     ];
-
-    let result = await this.provider.send('tenderly_addBalance', params);
-    console.log(result);
+    await this.provider.send('tenderly_addBalance', params);
   }
 
   getTokenAddress(name: string) {
@@ -100,16 +64,8 @@ export class TenderlyManager {
     else return BigNumber.from(amount).mul(Math.pow(10, decimals));
   }
 
-  getTokenContract(tokenAddress: string) {
-    return new ethers.Contract(tokenAddress, tokenAbi, this.provider);
-  }
-
-  getCauldronContract(cauldronAddress: string) {
-    return new ethers.Contract(cauldronAddress, cauldronAbi, this.provider);
-  }
-
   async getBentoBoxAddress(cauldronAddress: string) {
-    return await this.getCauldronContract(cauldronAddress).connect(this.provider).bentoBox();
+    return await getContract(cauldronAddress, cauldronAbi, this.provider).bentoBox();
   }
 
   async getBentoBoxContract(bentoBoxAddress: string) {
@@ -122,11 +78,10 @@ export class TenderlyManager {
     amount: number,
     holderAddresses: Array<string> = []
   ): Promise<{ status: string; txHash?: string; msg?: string }> {
-    let contract = this.getTokenContract(tokenAddress);
+    let contract = getContract(tokenAddress, tokenAbi, this.provider);
     let txAmount = await this.formatAmount(contract, amount);
 
     let result = await this.findHolder(contract, txAmount, holderAddresses);
-    console.log(result);
     if (result.holder == undefined) return result;
 
     let tx = await this.execute(contract, result.holder, 'transfer', [toAddress, txAmount]);
@@ -134,7 +89,6 @@ export class TenderlyManager {
   }
 
   async execute(contract: Contract, fromAddress: string, method: string, functionArgs: any) {
-    console.log(functionArgs);
     const unsignedTx = await contract.populateTransaction[method](...functionArgs);
     const tenderlyArgs = [
       {
@@ -162,7 +116,7 @@ export class TenderlyManager {
   async topUpCauldron(cauldronAddress: string, amount: string, addedHolders: Array<string> = []) {
     let bentoBoxAddr = await this.getBentoBoxAddress(cauldronAddress);
     let bentoBoxContract = await this.getBentoBoxContract(bentoBoxAddr);
-    let mimContract = await this.getTokenContract(this.getTokenAddress('mim'));
+    let mimContract = await getContract(this.getTokenAddress('mim'), tokenAbi, this.provider);
     let formattedAmount = await this.formatAmount(mimContract, amount);
     let result = await this.findHolder(mimContract, formattedAmount, addedHolders);
 

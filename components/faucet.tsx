@@ -2,23 +2,13 @@ import { useState, useEffect, ChangeEvent, MouseEvent, ChangeEventHandler, Mouse
 import { safeJsonParse, camelize, formatAddress, getChainFromId } from '../helpers/utils';
 import { Chain } from '../models/chain';
 import { map, find, keys } from 'underscore';
-import { TenderlyManager } from '../models/tenderlyManager';
 import { FlashState, ChainConfig, FaucetProps } from '../helpers/interfaces';
 import ChainSelect from './chainSelect';
 import ForkUrlInput from './forkUrlInput';
 import SubmitButton from './submitButton';
+import { TokenTransferer } from '../models/TokenTransferer';
 
 const config: ChainConfig = require('../configs/chains.json');
-// toAddress: string;
-// chain: string;
-// token: string;
-// forkUrl: string;
-// tokenAmount: number;
-// flashMsg: string;
-// cauldronAddress: string;
-// holderAddresses: string;
-
-const chainOptions = map(keys(config), (key) => new Chain(key, config[key].imageUrl));
 
 export default function Faucet(props: FaucetProps) {
   const [toAddress, setToAddress] = useState('');
@@ -28,10 +18,6 @@ export default function Faucet(props: FaucetProps) {
   const [tokenAmount, setTokenAmount] = useState('');
   const [tokenAddress, setTokenAddress] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const [tenderlyManager, setTenderlyManager] = useState<TenderlyManager | undefined>(undefined);
-
-  useEffect(() => setTenderlyManager(new TenderlyManager(chain, forkUrl)), [forkUrl, chain]);
 
   useEffect(function () {
     setForkUrl(safeJsonParse(window.localStorage.getItem('forkUrl')));
@@ -56,18 +42,16 @@ export default function Faucet(props: FaucetProps) {
   }
 
   function isAddress(value: string) {
-    return value.toLowerCase().substring(0, 2) === '0x';
+    return !!value.match(/^0x[a-fA-F0-9]{40}$/);
   }
 
   function handleTokenChange(event: ChangeEvent<HTMLInputElement>) {
     var tokenAddress = '';
-    console.log(event.target.value);
     if (isAddress(event.target.value)) {
       tokenAddress = event.target.value;
     } else {
       tokenAddress = config[chain].tokens[event.target.value];
     }
-    console.log('tokenAddress', tokenAddress);
     handleChange('tokenAddress', tokenAddress, setTokenAddress);
   }
 
@@ -86,15 +70,16 @@ export default function Faucet(props: FaucetProps) {
   async function handleSubmit(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
 
-    if (tenderlyManager == null) return;
     setIsSubmitting(true);
 
-    let result = await tenderlyManager.addTokenToWallet(
-      tokenAddress,
-      toAddress,
-      parseFloat(tokenAmount),
-      holderAddresses.split(',')
-    );
+    let result: { status?: string; msg?: string } = {};
+
+    if (isAddress(toAddress) && isAddress(tokenAddress)) {
+      let tokenTransferer = new TokenTransferer(chain, tokenAddress, forkUrl);
+      result = await tokenTransferer.addTokenToWallet(toAddress, tokenAmount, holderAddresses.split(','));
+    } else {
+      result = { status: 'error', msg: 'Invalid addresses' };
+    }
 
     if (result.status == 'success') {
       showFlashMessage({

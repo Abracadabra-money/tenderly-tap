@@ -5,6 +5,7 @@ import { FlashState, ChainConfig, FaucetProps } from '../helpers/interfaces';
 import ChainSelect from './chainSelect';
 import ForkUrlInput from './forkUrlInput';
 import SubmitButton from './submitButton';
+import { CauldronTransferer } from '../models/CauldronTransferer';
 
 export default function Faucet(props: FaucetProps) {
   const [cauldronAddress, setCauldronAddress] = useState('');
@@ -12,13 +13,11 @@ export default function Faucet(props: FaucetProps) {
   const [chain, setChain] = useState('ETH');
   const [tokenAmount, setTokenAmount] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [holderAddresses, setHolderAddresses] = useState('');
 
   useEffect(function () {
     setForkUrl(safeJsonParse(window.localStorage.getItem('forkUrl')));
     setCauldronAddress(safeJsonParse(window.localStorage.getItem('cauldronAddress')));
     setTokenAmount(safeJsonParse(window.localStorage.getItem('tokenAmount')));
-    setHolderAddresses(safeJsonParse(window.localStorage.getItem('holderAddresses')));
   }, []);
 
   function saveToLocalStorage(key: string, value: string) {
@@ -35,17 +34,13 @@ export default function Faucet(props: FaucetProps) {
     setter(value);
   }
 
-  function isAddress(value: string) {
-    return value.toLowerCase().substring(0, 2) === '0x';
-  }
-
   async function handleSubmit(event: MouseEvent<HTMLButtonElement>) {
     try {
       setIsSubmitting(true);
       event.preventDefault();
-      event.preventDefault();
-      let tenderlyManager = new TenderlyManager(chain, forkUrl);
-      await tenderlyManager.topUpCauldron(cauldronAddress, tokenAmount, holderAddresses.split(','));
+
+      let cauldronTransferer = new CauldronTransferer(chain, cauldronAddress, forkUrl);
+      await cauldronTransferer.topUpCauldron(tokenAmount);
       showFlashMessage({
         type: 'success',
         boldMessage: 'Success!',
@@ -58,8 +53,8 @@ export default function Faucet(props: FaucetProps) {
         message: `Error: ${error}`,
       });
     }
+
     setIsSubmitting(false);
-    event.preventDefault();
   }
 
   function renderInputGroup(
@@ -135,20 +130,6 @@ export default function Faucet(props: FaucetProps) {
             (event.target as HTMLInputElement).value,
             setTokenAmount
           )
-        )}
-
-        {renderInputGroup(
-          'holderAddresses',
-          'Holder addresses',
-          '0x123...abc, 0x134...def',
-          holderAddresses,
-          (event: ChangeEvent) =>
-            handleChange(
-              (event.target as HTMLInputElement).name,
-              (event.target as HTMLInputElement).value,
-              setHolderAddresses
-            ),
-          { footnote: 'Addresses must be separated by commas' }
         )}
       </div>
 

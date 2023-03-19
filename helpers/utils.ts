@@ -1,5 +1,6 @@
 import { ChainConfig } from '../helpers/interfaces';
 import { findKey } from 'underscore';
+import { BigNumber, ethers } from 'ethers';
 
 export function safeJsonParse(value: string | null): string {
   try {
@@ -28,4 +29,28 @@ export function getChainFromId(chainId: string) {
   return findKey(config, (data: { [key: string]: any }) => {
     return data.chainId == chainId;
   });
+}
+
+export function getProvider(forkUrl: string): ethers.providers.JsonRpcProvider {
+  return new ethers.providers.JsonRpcProvider(forkUrl);
+}
+
+export function getContract(
+  address: string,
+  abi: ethers.ContractInterface,
+  provider: ethers.providers.JsonRpcProvider
+) {
+  return new ethers.Contract(address, abi, provider);
+}
+
+export function bnToFloat(num: BigNumber, decimal: number) {
+  return parseFloat(ethers.utils.formatUnits(num, decimal));
+}
+
+export function expandDecimals(decimal: number) {
+  return BigNumber.from(10).pow(decimal);
+}
+
+export function bn(num: string | number) {
+  return BigNumber.from(num);
 }

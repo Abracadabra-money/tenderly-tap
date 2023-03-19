@@ -1,0 +1,94 @@
+[
+    {
+        "scope": "https://rpc.tenderly.co:443",
+        "method": "POST",
+        "path": "/fork/38655d0a-4d2e-4b54-aa49-042a113a24ed",
+        "body": {
+            "method": "eth_chainId",
+            "params": [],
+            "id": 42,
+            "jsonrpc": "2.0"
+        },
+        "status": 200,
+        "response": {
+            "id": 42,
+            "jsonrpc": "2.0",
+            "result": "0x1"
+        },
+        "rawHeaders": [
+            "Content-Type",
+            "application/json",
+            "Head",
+            "b21ba103-4a51-4d82-8c76-42428b4f0e7e",
+            "Vary",
+            "Origin",
+            "Date",
+            "Sun, 12 Mar 2023 07:36:52 GMT",
+            "Content-Length",
+            "40",
+            "Via",
+            "1.1 google",
+            "Alt-Svc",
+            "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+            "Connection",
+            "close"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.tenderly.co:443",
+        "method": "GET",
+        "path": "/api/v2/project/magic-internet-money/forks/38655d0a-4d2e-4b54-aa49-042a113a24ed",
+        "body": "",
+        "status": 200,
+        "response": {
+            "fork": {
+                "id": "38655d0a-4d2e-4b54-aa49-042a113a24ed",
+                "name": "Abracadabra SDK Tests (DO NOT DELETE)",
+                "network_id": "1",
+                "block_number": "16617737",
+                "details": {
+                    "chain_config": {
+                        "chain_id": "1"
+                    }
+                },
+                "accounts": {
+                    "0x17462C4ab813acA95f5B96a1A54057B64543Cc61": "0xc2544af162b9fdd7571e8ca6a99d3ebbade6244bc3540eacdcfa8ed54b31883b",
+                    "0x2191216bf3B350a30A13111E9C35876Fa11176D7": "0x3faae2e0f428d06ed73958d652660a9ea313d2fb2557b6e80f045de360a12b4b",
+                    "0x5BD93c1a1Be624C38Bf24f80441cB89ee2Ece594": "0xf8e6cab53bc18e58622d2559e865c493edbb32b462afd5006ba38f6fdd8992c0",
+                    "0x6661686F97ad2493bC0F11Df5c807d7616849Ec0": "0xe82ed0be4779265fe5c0b4927ee5b16397c1f0c624e4e707c7412a4147e19738",
+                    "0x6b8aBfD7466e8624A21b98abE75450da09129815": "0xb5c4686aeb67c389d91dec1da2b57c91d5fec4fb4f14d3e2fcbda4d48424a2e7",
+                    "0x7e3b63BB93f60D3c417C6f7D311b49915411A099": "0x626381c41f2bc3911d3b4a65da8d9e6e26b8248279fbd396f6694813182969bc",
+                    "0x7f06adC443532Ad901311c7412C793aEED848707": "0x9374da47bde8a621134546e47fd90cf488d347f19ee134b4155ac296b4c36c57",
+                    "0xECBa20575eB2D815416dAaaB40ba36cFCD33C694": "0x19c63f3bc4fa4706bcec5da05cc8086db7af18de8c906a48dbe2288cf33b7259",
+                    "0xFb6Ae3Ef7dE1Ad4e1b32AB6a59aFC79c2381c2ae": "0xac5bb726c16c30e13ec226fe50e13b169aea90bedbde8e32306a3a72a381f36b",
+                    "0xf143d2EDa99485e0F6F8f00bb7Fff1aEc62bdc07": "0x9c0e2390ee01a2fa6bd5f32dcbd2b6a8eddd398fb83ca3438b572c1c7e9960bc"
+                },
+                "head_simulation_id": "b21ba103-4a51-4d82-8c76-42428b4f0e7e",
+                "json_rpc_url": "https://rpc.tenderly.co/fork/38655d0a-4d2e-4b54-aa49-042a113a24ed",
+                "config": {
+                    "base_fee": "1"
+                }
+            }
+        },
+        "rawHeaders": [
+            "Content-Type",
+            "application/json",
+            "User-Agent",
+            "axios/0.27.2",
+            "Vary",
+            "Origin",
+            "Date",
+            "Sun, 12 Mar 2023 07:36:52 GMT",
+            "Content-Length",
+            "1527",
+            "Via",
+            "1.1 google",
+            "Alt-Svc",
+            "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+            "Connection",
+            "close"
+        ],
+        "responseIsBinary": false
+    }
+]

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getChainFromId } from '../helpers/utils';
-import { TenderlyManager } from '../models/tenderlyManager';
+import { Tenderly } from '../models/Tenderly';
 import { Icon } from '@iconify/react';
 import { ChainConfig } from '../helpers/interfaces';
 import { utils } from 'ethers';
@@ -15,8 +15,6 @@ interface ForkUrlInputProps {
 }
 
 export default function ForkUrlInput(props: ForkUrlInputProps) {
-  const [footnote, setFootnote] = useState('');
-  const [chainId, setChainId] = useState('');
   const name = 'forkUrl';
   const label = 'Tenderly fork URL';
   const placeholder = 'https://rpc.tenderly.co/fork/...';
@@ -26,8 +24,8 @@ export default function ForkUrlInput(props: ForkUrlInputProps) {
     function () {
       async function getChainIdFromFork() {
         if (props.forkUrl === '') return;
-        let tm = new TenderlyManager('ETH', props.forkUrl);
-        let chainId = await tm.getChainIdFromFork();
+        let tenderly = new Tenderly(props.forkUrl);
+        let chainId = await tenderly.getChainIdFromFork();
         let chain = getChainFromId(chainId);
 
         if (!chain) {
@@ -61,7 +59,6 @@ export default function ForkUrlInput(props: ForkUrlInputProps) {
   }
 
   async function addNetwork() {
-    console.log(window.ethereum);
     if (window.ethereum && window.ethereum.request)
       await window.ethereum.request({
         method: 'wallet_addEthereumChain',
@@ -106,8 +103,6 @@ export default function ForkUrlInput(props: ForkUrlInputProps) {
           <span>Add to Metamask</span>
         </button>
       </div>
-
-      <p className="mt-2 text-xs ml-0 text-gray-500">{footnote}</p>
     </div>
   );
 }

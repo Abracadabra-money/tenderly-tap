@@ -1,11 +1,11 @@
 import { useState, useEffect, ChangeEvent, MouseEvent, ChangeEventHandler } from 'react';
 import { safeJsonParse, camelize, formatAddress } from '../helpers/utils';
-import { TenderlyManager } from '../models/tenderlyManager';
 import { FlashState, ChainConfig, FaucetProps } from '../helpers/interfaces';
 import ChainSelect from './chainSelect';
 import Spinner from './spinner';
 import ForkUrlInput from './forkUrlInput';
 import SubmitButton from './submitButton';
+import { Tenderly } from '../models/Tenderly';
 
 const config: ChainConfig = require('../configs/chains.json');
 // toAddress: string;
@@ -33,10 +33,6 @@ export default function GasManager(props: FaucetProps) {
     window.localStorage.setItem(key, JSON.stringify(value));
   }
 
-  function isAddress(value: string) {
-    return value.toLowerCase().substring(0, 2) === '0x';
-  }
-
   function handleChange(key: string, value: string, setter: Function) {
     if (key == 'chain') {
       saveToLocalStorage('tokenAddress', '');
@@ -51,8 +47,9 @@ export default function GasManager(props: FaucetProps) {
       setIsSubmitting(true);
       event.preventDefault();
 
-      let tenderlyManager = new TenderlyManager(chain, forkUrl);
-      await tenderlyManager.addGasToken(toAddress, parseFloat(tokenAmount));
+      let tenderly = new Tenderly(forkUrl);
+      await tenderly.addGasToken(toAddress, tokenAmount);
+
       showFlashMessage({
         type: 'success',
         boldMessage: 'Success!',
